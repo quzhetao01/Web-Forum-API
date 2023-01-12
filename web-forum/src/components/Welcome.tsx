@@ -1,11 +1,12 @@
 import React from 'react';
 import {useNavigate} from "react-router-dom"
-import WelcomeCSS from './Welcome.module.css';
+import  WelcomeCSS from './Welcome.module.css';
 
 function Welcome() {
     const navigate = useNavigate();
-    function handleClick(event) {
-        const {name} = event.target;
+    function handleClick(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+        console.log(event);
+        const {name} = event.currentTarget ;
         const link = `/${name}`; // Either register or login route
         navigate(link, {state: {action: name === "register" ? "Register" : "Login"}});
 

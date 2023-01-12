@@ -8,7 +8,7 @@ function Login() {
     const [text, setText] = useState({username: "", password: ""});
     const navigate = useNavigate();
 
-    function handleUsername(event) {
+    function handleUsername(event: React.ChangeEvent<HTMLInputElement>) {
         const {name, value} = event.target;
         setText(prevValue => {
             return {
@@ -18,7 +18,7 @@ function Login() {
         });
     }
 
-    function handleSubmit(event) {
+    function handleSubmit(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
         const data = {'username': text.username, "password": text.password};
         setText({username: "", password: ""})
         

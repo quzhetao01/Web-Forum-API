@@ -8,8 +8,8 @@ import Register from './Register';
 function App() {
     return <div>
         <Router>
-            <Routes>
-                <Route exact path="/" element={<Welcome />} />
+            <Routes> 
+                <Route path="/" element={<Welcome />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/forum" element={<Forum />} />
