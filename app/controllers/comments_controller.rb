@@ -1,5 +1,5 @@
 class CommentsController < ApplicationController
-  before_action :set_comment, only: %i[ show update destroy ]
+  # before_action :set_comment, only: %i[ show update destroy ]
 
   # GET /comments
   def index
@@ -10,7 +10,8 @@ class CommentsController < ApplicationController
 
   # GET /comments/1
   def show
-    render json: @comment
+    @comments = Comment.where(post_id: params[:post_id])
+    render json: @comments
   end
 
   # POST /comments
@@ -40,12 +41,12 @@ class CommentsController < ApplicationController
 
   private
     # Use callbacks to share common setup or constraints between actions.
-    def set_comment
-      @comment = Comment.find(params[:id])
-    end
+    # def set_comment
+    #   @comment = Comment.find(params[:id])
+    # end
 
-    # Only allow a list of trusted parameters through.
+    # Only allow a list of trusted parameters Cthrough.
     def comment_params
-      params.require(:comment).permit(:text)
+      params.require(:comment).permit(:text, :post_id)
     end
 end

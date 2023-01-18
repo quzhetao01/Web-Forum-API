@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  # skip_before_action :verify_authenticity_token
   before_action only: %i[ show update destroy ]
 
   # GET /users
@@ -8,11 +9,11 @@ class UsersController < ApplicationController
     render json: users
   end
 
-  # GET /users/1
+  # GET /me
   def show
-    
-    if current_user
-      render json: user, status: :ok
+    # return user object
+    if authorized_user
+      render json: @user, status: :ok
     else
       render json: "Not authenticated", status: :unauthorized
     end
@@ -21,16 +22,28 @@ class UsersController < ApplicationController
   # POST /users
   def create
     # debugger
-    user = User.create(user_params)
+    @user = User.create(user_params)
 
-    if user.valid?
-      session[:user_id] = user.id
-      render json: user, status: :created, location: user
+    if @user.valid?
+      token = encode_token({user_id: @user.id})
+      render json: {user: @user, token: token}, status: :ok
     else
-      render json: user.errors, status: :unprocessable_entity
+      render json: @user.errors, status: :unprocessable_entity
     end
   end
 
+  def login
+    puts 'here'
+    @user = User.find_by(username: user_params[:username])
+    puts @user
+    puts @user.authenticate(user_params[:password])
+    if @user && @user.authenticate(user_params[:password])
+      token = encode_token({ user_id: @user.id})
+      render json: {user: @user, token: token}, status: :ok
+    else
+      render json: {error: 'Invalid username or password' }, status: :unprocessable_entity
+    end
+  end
   # PATCH/PUT /users/1
   def update
     # if @user.update(user_params)
@@ -54,6 +67,6 @@ class UsersController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def user_params
-      params.require(:user).permit(:username, :password, :password_confirmation)
+      params.require(:user).permit(:username, :password)
     end
 end

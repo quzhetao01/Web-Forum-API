@@ -1,12 +1,25 @@
-import React, {useState} from 'react';
-import WelcomeCSS from './Welcome.module.css';
+import React, {useState, useEffect} from 'react';
+import WelcomeCSS from '../styles/Welcome.module.css';
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
+import tokenConfig from './helper';
 
 function Login() {
     // action is either Login or Register
     const [text, setText] = useState({username: "", password: ""});
     const navigate = useNavigate();
+
+    // Redirect to forum page is user is already logged in, stay at the same page if not
+    useEffect(() => {
+        if (localStorage.getItem('jwt')) {
+            let config = tokenConfig();
+            axios.get('http://localhost:3000/me', config)
+                .then(res => {
+                    window.location.href = 'http://localhost:3001/forum'
+                })
+                .catch(err => console.log(err))
+        }
+    })
 
     function handleUsername(event: React.ChangeEvent<HTMLInputElement>) {
         const {name, value} = event.target;
@@ -19,12 +32,14 @@ function Login() {
     }
 
     function handleSubmit(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-        const data = {'username': text.username, "password": text.password};
+        const data = {'user': {'username': text.username, "password": text.password}};
         setText({username: "", password: ""})
-        
+        console.log(data);
         axios.post('http://localhost:3000/login', data)
             .then(res => {
-                console.log(res);
+                console.log(res.data.token);
+                const token =  res.data.token;
+                localStorage.setItem('jwt', token)
                 navigate("/forum");
             })
             .catch(err => console.log(err));
