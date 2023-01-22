@@ -7,6 +7,7 @@ import Register from './Register';
 import AddPost from './AddPost';
 import Navbar from './Navbar';
 import Thread from './Thread';
+import EditPost from './EditPost';
 
 function App() {
     return <div>
@@ -18,6 +19,7 @@ function App() {
                 <Route path="/register" element={<Register />} />
                 <Route path="/forum" element={<Forum />} />
                 <Route path="/addPosts" element={<AddPost />} />
+                <Route path="/editPosts/:id" element={<EditPost />} />
                 <Route path="/forum/:id" element={<Thread />} />
 
             </Routes>

@@ -14,6 +14,18 @@ class PostsController < ApplicationController
     render json: @post
   end
 
+  #GET /posts/search/:search
+  def showSearch
+    posts = Post.where("header LIKE ?", "%" + params[:search] + "%")
+    render json: posts
+  end
+
+  #GET /posts/cateogry/:id
+  def showCategory
+    posts = Post.where(category_id: params[:id])
+    render json: posts
+  end
+
   # POST /posts
   def create
     @post = Post.new(post_params.merge(user: @user))
@@ -27,7 +39,7 @@ class PostsController < ApplicationController
 
   # PATCH/PUT /posts/1
   def update
-    if @post.update(post_params)
+    if @post.update(post_params.merge(user: @user))
       render json: @post
     else
       render json: @post.errors, status: :unprocessable_entity
@@ -47,6 +59,6 @@ class PostsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def post_params
-      params.require(:post).permit(:header, :description)
+      params.require(:post).permit(:header, :description, :category_id)
     end
 end
