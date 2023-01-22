@@ -43,24 +43,80 @@ function Register() {
         
     }
 
-    return <div className='container'>
-        <h1>Register</h1>
-        <form>
-            <div className="mb-3">
-                <label htmlFor="usernameInput" className="form-label">Username</label>
-                <input onChange={handleUsername} id="usernameInput" className="form-control" type="text" 
-                name="username" value={text.username} placeholder='Enter your username here'/>
-                
+    return <section className="vh-100" >
+    <div className="container h-100">
+      <div className="row d-flex justify-content-center align-items-center h-100">
+        <div className="col-lg-12 col-xl-11">
+          <div className="card text-black">
+            <div className="card-body p-md-5">
+              <div className="row justify-content-center">
+                <div className="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
+  
+                  <p className="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Register</p>
+  
+                  <form className="mx-1 mx-md-4">
+  
+                    <div className="d-flex flex-row align-items-center mb-4">
+                      <i className="fas fa-user fa-lg me-3 fa-fw"></i>
+                      <div className="form-outline flex-fill mb-0">
+                        <input onChange={handleUsername} name="username" value={text.username} type="text" id="usernameInput" className="form-control" />
+                        <label className="form-label" htmlFor="passwordInput">Username</label>
+                      </div>
+                    </div>
+  
+                    
+  
+                    <div className="d-flex flex-row align-items-center mb-4">
+                      <i className="fas fa-lock fa-lg me-3 fa-fw"></i>
+                      <div className="form-outline flex-fill mb-0">
+                        <input onChange={handleUsername} name="password" value={text.password} type="password" id="passwordInput" className="form-control" />
+                        <label className="form-label" htmlFor="passwordInput">Password</label>
+                      </div>
+                    </div>
+  
+                    
+  
+                    
+  
+                    <div className="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+                    <button onClick={handleSubmit} type="button" className={`${WelcomeCSS.btn} btn btn-dark`} style={{backgroundColor: "#576490", width: "30%"}}>Register</button>
+                    </div>
+  
+                  </form>
+  
+                </div>
+                <div className="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
+  
+                  <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/draw1.webp"
+                    className="img-fluid" alt="Sample"/>
+  
+                </div>
+              </div>
             </div>
-            <div className="mb-3">
-                <label htmlFor="passwordInput" className="form-label">Password</label>
-                <input onChange={handleUsername} id="passwordInput" className="form-control" type="text" 
-                name="password" value={text.password} placeholder='Enter your password here'/>
-            </div>
-                <button onClick={handleSubmit} type="button" 
-                className={`${WelcomeCSS.btn} btn btn-dark`}>Register</button>
-        </form>
+          </div>
+        </div>
+      </div>
     </div>
-}
+  </section>
+} 
+    
+    // {/* <div classNameName='container'>
+    //     <h1>Register</h1>
+    //     <form>
+    //         <div classNameName="mb-3">
+    //             <label htmlFor="usernameInput" classNameName="form-label">Username</label>
+    //             <input onChange={handleUsername} id="usernameInput" classNameName="form-control" type="text" 
+    //             name="username" value={text.username} placeholder='Enter your username here'/>
+                
+    //         </div>
+    //         <div classNameName="mb-3">
+    //             <label htmlFor="passwordInput" classNameName="form-label">Password</label>
+    //             <input onChange={handleUsername} id="passwordInput" classNameName="form-control" type="text" 
+    //             name="password" value={text.password} placeholder='Enter your password here'/>
+    //         </div>
+    //             <button onClick={handleSubmit} type="button" 
+    //             classNameName={`${WelcomeCSS.btn} btn btn-dark`}>Register</button>
+    //     </form>
+    // </div> */}
 
 export default Register;

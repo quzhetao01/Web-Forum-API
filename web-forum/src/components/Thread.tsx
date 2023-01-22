@@ -4,6 +4,9 @@ import tokenConfig from './helper';
 import axios from 'axios';
 import ThreadCSS from '../styles/Thread.module.css'
 import Comment, {IComment} from './Comment';
+import AddIcon from '@mui/icons-material/Add';
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
+import Delete from '@mui/icons-material/Delete';
 
 
 
@@ -14,6 +17,7 @@ function Thread() {
     const [isExpanded, setExpanded] = useState(false);
     const [newComment, setNewComment] = useState("");
     const [comments, setComments] = useState<IComment[]>([]);
+    const [isError, setError] = useState(false);
     let { id } = useParams();
     let navigate = useNavigate();
 
@@ -62,23 +66,29 @@ function Thread() {
     }
     
     function submitComment(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-        const commentData = {"comment": {
-            "text": newComment,
-            "post_id": id,
-            "user_id": userID
-        }}
-        let config = tokenConfig();
-        axios.post("http://localhost:3000/comments", commentData, config)
-        .then(res => {
-            console.log(res);
-            setComments((prevValue: IComment[]) => {
-                return [...prevValue, res.data]
+        if (newComment) {
+
+            
+            const commentData = {"comment": {
+                "text": newComment,
+                "post_id": id,
+                "user_id": userID
+            }}
+            let config = tokenConfig();
+            axios.post("http://localhost:3000/comments", commentData, config)
+            .then(res => {
+                console.log(res);
+                setComments((prevValue: IComment[]) => {
+                    return [...prevValue, res.data]
+                })
             })
-        })
-        .catch(err => {
-            console.log(err);
-        })
-        setNewComment("");
+            .catch(err => {
+                console.log(err);
+            })
+            setNewComment("");
+        } else {
+            setError(true);
+        }
 
     }
     
@@ -94,34 +104,80 @@ function Thread() {
         window.location.href = "http://localhost:3001/forum"
     }
 
-    return <div className={ThreadCSS.post}>
-        <div>
-            <h3>{post.header}</h3>
-            <p>{post.description}</p>
-            {userID === post.user_id && <button onClick={handleEdit} className="btn btn-dark">Edit post</button>}
-            {userID === post.user_id && <button onClick={handleDelete} className="btn btn-dark">Delete post</button>}
+    return <div className="container-fluid p-5">
+        <div className="row px-5">
+            <div className="col px-5">
+                <div className="card">
+                    <div className="card-body">
+                        <div className="border-bottom pb-5">
+                            <div className="d-flex justify-content-between">
+                                <h3>{post.header}</h3>
+                                <div>
+                                    {userID === post.user_id && <button onClick={handleEdit} className={`btn btn-dark ${ThreadCSS.editPost}`}><ModeEditIcon/></button>}
+                                    {userID === post.user_id && <button onClick={handleDelete} className={`btn btn-dark ${ThreadCSS.editPost}`}><Delete/></button>}
+                                    
+                                </div>
+                            </div>
+                            <p>{post.description}</p>
+                            <div className={ThreadCSS.addSection}>
+
+                                <textarea
+                                    className={ThreadCSS.addComment}
+                                    name="content"
+                                    onClick={expand}
+                                    onChange={handleChange}
+                                    value={newComment}
+                                    placeholder="Input a comment"
+                                    rows={isExpanded ? 3 : 1}
+                                    />
+                                <button className={`${ThreadCSS.addButton}`} onClick={submitComment}><AddIcon/></button>
+                            </div>
+                            {isError && <p className={`text-danger`}>Cannot publish an empty comment</p>}
+                        </div>
+                        <div style={{backgroundColor: "#fcfbfc"}} className={`mt-5 card ${ThreadCSS.commentList}`}>
+                            {comments.map((comment: IComment, index) => <Comment 
+                                    key={index} 
+                                    id={comment.id} 
+                                    text={comment.text} 
+                                    postID={comment.post_id} 
+                                    commentUser={comment.user_id}
+                                    currentUser={userID}
+                                    setComments={setComments} />)}
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
         </div>
-        <div>
-        <textarea
-            className={ThreadCSS.addComment}
-            name="content"
-            onClick={expand}
-            onChange={handleChange}
-            value={newComment}
-            placeholder="Input a comment"
-            rows={isExpanded ? 3 : 1}
-        />
-        <button onClick={submitComment} className="btn btn-dark">Add Comment</button>
-        </div>
-        {comments.map((comment: IComment, index) => <Comment 
-            key={index} 
-            id={comment.id} 
-            text={comment.text} 
-            postID={comment.post_id} 
-            commentUser={comment.user_id}
-            currentUser={userID}
-            setComments={setComments} />)}
     </div>
+    // <div className={ThreadCSS.post}>
+    //     <div>
+    //         <h3>{post.header}</h3>
+    //         <p>{post.description}</p>
+    //         {userID === post.user_id && <button onClick={handleEdit} className="btn btn-dark">Edit post</button>}
+    //         {userID === post.user_id && <button onClick={handleDelete} className="btn btn-dark">Delete post</button>}
+    //     </div>
+    //     <div>
+    //     <textarea
+    //         className={ThreadCSS.addComment}
+    //         name="content"
+    //         onClick={expand}
+    //         onChange={handleChange}
+    //         value={newComment}
+    //         placeholder="Input a comment"
+    //         rows={isExpanded ? 3 : 1}
+    //     />
+    //     <button onClick={submitComment} className="btn btn-dark">Add Comment</button>
+    //     </div>
+    //     {comments.map((comment: IComment, index) => <Comment 
+    //         key={index} 
+    //         id={comment.id} 
+    //         text={comment.text} 
+    //         postID={comment.post_id} 
+    //         commentUser={comment.user_id}
+    //         currentUser={userID}
+    //         setComments={setComments} />)}
+    // </div>
 
     
 

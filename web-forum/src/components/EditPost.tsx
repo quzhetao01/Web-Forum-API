@@ -62,21 +62,25 @@ const EditPost = () => {
             window.location.href = `http://localhost:3001/forum/${id}`;
         }
     }
-
-
-    return <div className='container'>
-        <h1>Edit your thread</h1>
-        <div className="mb-3">
-            <label htmlFor="header" className="form-label">Title</label>
-            <input onChange={handleText} name="title" className="form-control" id="header" placeholder="Title" value={text.title}/>
+    return <div style={{backgroundColor: "#fff8f0"}}>
+        <div className={"container py-5"}>
+            <div className={`${AddPostCSS.container} card`}>
+                <h5 style={{backgroundColor: "#f8f8f8"}} className="card-header">Edit your thread</h5>
+                <div className="card-body">
+                    <div className="mb-3">
+                        <label htmlFor="header" className="form-label">Title</label>
+                        <input onChange={handleText} name="title" className="form-control" id="header" placeholder="Title" value={text.title}/>
+                    </div>
+                    <div className="mb-4">
+                        <label htmlFor="description" className="form-label">Description</label>
+                        <textarea onChange={handleText} name="description" className="form-control" id="description" rows={7} placeholder="Text" value={text.description}></textarea>
+                    </div>
+                        {isError.title && <p className={AddPostCSS.error}>Title cannot be empty</p>}
+                        {isError.description && <p className={AddPostCSS.error}>Description cannot be empty</p>}
+                        <button className='btn btn-dark' onClick={editThread} style={{backgroundColor: "#576490"}}>Publish edited thread</button>
+                </div>
+            </div>
         </div>
-        <div className="mb-3">
-            <label htmlFor="description" className="form-label">Description</label>
-            <textarea onChange={handleText} name="description" className="form-control" id="description" rows={7} placeholder="Text" value={text.description}></textarea>
-        </div>
-        {isError.title && <p className={AddPostCSS.error}>Title cannot be empty</p>}
-        {isError.description && <p className={AddPostCSS.error}>Description cannot be empty</p>}
-        <button className='btn btn-dark' onClick={editThread}>Publish edited thread</button>
     </div>
 }
 

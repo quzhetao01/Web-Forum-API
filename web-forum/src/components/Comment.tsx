@@ -1,7 +1,10 @@
-import React, {useState} from 'react';
-import CommentCSS from '../styles/Comment.module.css';
+import React, {useState, useEffect} from 'react';
+import ThreadCSS from '../styles/Thread.module.css'
 import tokenConfig from './helper';
 import axios from 'axios';
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
+
 
 export interface IComment {
     id: number,
@@ -24,6 +27,21 @@ function Comment(props: IProps) {
 
     const [isEditing, setEditing] = useState(false);
     const [editedComment, setEditedComment] = useState("");
+    const [username, setUsername] = useState("");
+
+    useEffect(() => {
+        let config = tokenConfig();
+        axios.get(`http://localhost:3000/users/${props.commentUser}`, config)
+            .then(res => {
+                console.log(props.commentUser);
+                console.log(res.data);
+                setUsername(res.data.username);
+            })
+            .catch(err => { //redirect to welcome page
+                console.log(err);
+                window.location.href = "http://localhost:3001/";
+            })
+    }, [])
 
 
     function handleEdit() {
@@ -67,23 +85,28 @@ function Comment(props: IProps) {
         .catch(err => console.log(err));
     }
 
-    return <div id={props.id.toString()} className={`container ${CommentCSS.comment}`}>
-        <p>{props.text}</p>
-        {props.commentUser === props.currentUser && <button onClick={handleEdit} className="btn btn-primary">Edit comment</button>}
-        {props.commentUser === props.currentUser && <button onClick={handleDelete} className="btn btn-dark">Delete comment</button>}
-        {isEditing && <div>
+    return <div id={props.id.toString()} className={`container card-body border-bottom ${ThreadCSS.comment}`}>
+        <div className="mb-3">
+            <h5 style={{fontWeight: "bold", display: "inline"}}>{username}</h5><p style={{display: "inline"}}> commented:</p>
+        </div>
+        <p style={{backgroundColor: "#ecf3f9"}} className={`border ${ThreadCSS.commentText}`}>{props.text}</p>
+        {props.commentUser === props.currentUser && <button onClick={handleEdit} className={`btn btn-dark ${ThreadCSS.editComment}`}><ModeEditOutlineOutlinedIcon/></button>}
+        {props.commentUser === props.currentUser && <button onClick={handleDelete} className={`btn btn-dark ${ThreadCSS.editComment}`}><DeleteOutlineOutlinedIcon/></button>}
+        {isEditing && <div> 
+            <div className={ThreadCSS.addSection}>
             <textarea
-                // className={ThreadCSS.addComment}
+                className={ThreadCSS.addComment}
                 name="content"
                 onChange={handleChange}
                 value={editedComment}
                 placeholder="Edit your comment"
                 rows={1}
             />       
-            <button onClick={cancelEdit} className="btn btn-primary">Cancel edit</button>
-            <button onClick={submitEdit} className="btn btn-primary">Publish changes</button>
-
+        </div>
+            <button onClick={cancelEdit} className={`btn btn-dark ${ThreadCSS.cancelEdit}`}>Cancel edit</button>
+            <button onClick={submitEdit} className={`btn btn-dark ${ThreadCSS.cancelEdit}`}>Publish changes</button>
         </div>}
+
     </div>
 }
 

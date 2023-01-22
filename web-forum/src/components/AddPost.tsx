@@ -85,28 +85,35 @@ const AddPost = () => {
     }  
 
 
-    return <div className='container'>
-        <h1>AddPosts Page</h1>
-        <div className="mb-3">
-            <label htmlFor="header" className="form-label">Title</label>
-            <input onChange={handleText} name="title" className="form-control" id="header" placeholder="Title" value={text.title}/>
+    return <div style={{backgroundColor: "#fff8f0"}}>
+        <div className={"container py-5"}>
+            <div className={`${AddPostCSS.container} card`}>
+                <h5 style={{backgroundColor: "#f8f8f8"}} className="card-header">Add your own thread</h5>
+                <div className="card-body">
+                    {/* <h1>Add your own thread</h1> */}
+                    <div className="mb-3">
+                        <label htmlFor="header" className="form-label">Title</label>
+                        <input onChange={handleText} name="title" className="form-control" id="header" placeholder="Title" value={text.title}/>
+                    </div>
+                    <div className="mb-4">
+                        <label htmlFor="description" className="form-label">Description</label>
+                        <textarea onChange={handleText} name="description" className="form-control" id="description" rows={7} placeholder="Text" value={text.description}></textarea>
+                    </div>
+                    <h6>Choose an appropriate category for your thread</h6>
+                    <div className={`d-flex flex-wrap btn-group my-4 w-75`} role="group" aria-label="Basic radio toggle button group">
+                
+                        {categories.map((category, index) => <RadioButton key={index} id={category.id.toString()} name={category.name} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory}/>)}
+                    </div>
+                        {isError.title && <p className={`text-danger`}>Title cannot be empty</p>}
+                        {isError.description && <p className={`text-danger`}>Description cannot be empty</p>}
+                        {isError.category && <p className={`text-danger`}>Please choose a relevant category</p> }
+                        <button className='btn btn-dark' onClick={addThread} style={{backgroundColor: "#576490"}}>Publish thread</button>
+                </div>
+            </div>
         </div>
-        <div className="mb-3">
-            <label htmlFor="description" className="form-label">Description</label>
-            <textarea onChange={handleText} name="description" className="form-control" id="description" rows={7} placeholder="Text" value={text.description}></textarea>
-        </div>
-        {/* <div> */}
-        <div className="btn-group" role="group" aria-label="Basic radio toggle button group">
-            <h6>Choose an appropriate category for your thread</h6>
-            
-            {categories.map((category, index) => <RadioButton key={index} id={category.id.toString()} name={category.name} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory}/>)}
-        </div>
-        {/* </div> */}
-        {isError.title && <p className={AddPostCSS.error}>Title cannot be empty</p>}
-        {isError.description && <p className={AddPostCSS.error}>Description cannot be empty</p>}
-        {isError.category && <p className={AddPostCSS.error}>Please choose a relevant category</p> }
-        <button className='btn btn-dark' onClick={addThread}>Publish thread</button>
     </div>
+
+
 }
 
 export default AddPost;

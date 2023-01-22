@@ -31,8 +31,9 @@ function SearchBar(props: IProps) {
         setSearch("");
     }
 
-    return <div className="w-50 d-flex">
-            <input onChange={handleChange} className="form-control me-1" value={search} type="search" placeholder="Search" aria-label="Search"/>
+    return <div className="d-flex">
+            <input onChange={handleChange} className="form-control me-1" value={search} 
+            type="search" placeholder="Search"/>
             <button onClick={handleSearch} className="btn btn-primary">
             <i className="fa-solid fa-magnifying-glass"></i>
             </button>     

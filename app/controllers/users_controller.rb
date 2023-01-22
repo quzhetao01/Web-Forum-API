@@ -1,12 +1,10 @@
 class UsersController < ApplicationController
-  # skip_before_action :verify_authenticity_token
   before_action only: %i[ show update destroy ]
 
   # GET /users
   def index
-    users = User.all
-
-    render json: users
+    user = User.find(params[:id])
+    render json: user
   end
 
   # GET /me
@@ -18,6 +16,8 @@ class UsersController < ApplicationController
       render json: "Not authenticated", status: :unauthorized
     end
   end
+
+  # 
 
   # POST /users
   def create

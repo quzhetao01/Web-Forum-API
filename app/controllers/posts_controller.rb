@@ -20,7 +20,7 @@ class PostsController < ApplicationController
     render json: posts
   end
 
-  #GET /posts/cateogry/:id
+  #GET /posts/category/:id
   def showCategory
     posts = Post.where(category_id: params[:id])
     render json: posts
@@ -48,6 +48,7 @@ class PostsController < ApplicationController
 
   # DELETE /posts/1
   def destroy
+    @post.comments.destroy_all
     @post.destroy
   end
 

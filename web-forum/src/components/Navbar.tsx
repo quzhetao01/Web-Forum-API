@@ -2,6 +2,8 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
+import NavbarCSS from "../styles/Navbar.module.css";
+// import brandLogo from "./static/svg/NUS-Logo.svg";
 
 function Navibar() {
 
@@ -15,9 +17,12 @@ function Navibar() {
     }
 
     return (
-        <Navbar bg="dark" variant="dark" expand="lg">
+        <Navbar className="py-3 fs-5" style={{backgroundColor: "#2E4052", boxShadow: "0px 2px 25px rgba(0, 0, 0, .25)"}}  variant="dark" expand="lg">
         <Container>
-            <Navbar.Brand onClick={handleBrand} href="#home">NUSCS Forum</Navbar.Brand>
+            <Navbar.Brand className="fs-4" onClick={handleBrand} href="#home">
+                {/* <img src={brandLogo} alt="" /> */}
+                NUSCS Forum
+            </Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ms-auto">

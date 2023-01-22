@@ -1,8 +1,9 @@
 Rails.application.routes.draw do
-  get 'categories', to: "categories#show"
+  get 'categories', to: "categories#index"
+  get 'categories/:id', to: "categories#show"
   resources :comments, only: [:create]
   resources :posts
-  resources :users
+  get '/users/:id', to: "users#index"
   get '/me', to: "users#show"
   post "/login", to: "users#login"
   get "/posts/search/:search", to: "posts#showSearch"

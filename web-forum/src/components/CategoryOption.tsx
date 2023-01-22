@@ -2,19 +2,22 @@ import axios from "axios";
 import React from "react";
 import tokenConfig from "./helper";
 import { IPost } from "./Forum";
+import ForumCSS from '../styles/Forum.module.css';
 
 interface IProps {
     name: string,
     id: string,
     getPosts: () => void,
-    setPosts: React.Dispatch<React.SetStateAction<IPost[]>>
+    setPosts: React.Dispatch<React.SetStateAction<IPost[]>>,
+    setCategory: React.Dispatch<React.SetStateAction<string>>
 }
 
 function CategoryOption(props: IProps) {
     
     function handleClick(event: React.FormEvent<HTMLLIElement>) {
         const id = event.currentTarget.id;
-        console.log(id);
+        const display = id === "0" ? props.name : "Category: " + props.name;
+        props.setCategory(display);
         if (id === "0") {
             props.getPosts();
         } else {
@@ -28,7 +31,10 @@ function CategoryOption(props: IProps) {
         }
     }
 
-    return <li onClick={handleClick} id={props.id} className="list-group-item">{props.name}</li>
+    return <li onClick={handleClick} id={props.id} className="list-group-item" style={{backgroundColor: "#2E5266", 
+                                                                                        color: "white", 
+                                                                                        fontWeight: "bold"}}>{props.name}
+            </li>
 }
 
 export default CategoryOption;

@@ -1,4 +1,5 @@
 import React from "react";
+import AddPostCSS from "../styles/AddPost.module.css"
 
 interface IProps {
     id: string,
@@ -14,8 +15,8 @@ function RadioButton(props: IProps) {
     }
 
     return <span>
-            <input type="radio" className="btn-check" name={props.name} id={props.id} checked={props.selectedCategory === props.id} onChange={handleChange}/>
-            <label className="btn btn-outline-primary" htmlFor={props.id}>{props.name}</label>
+            <input type="radio" className={`${AddPostCSS.category} btn-check`} name={props.name} id={props.id} checked={props.selectedCategory === props.id} onChange={handleChange}/>
+            <label className={`btn-outline-secondary btn`} htmlFor={props.id}>{props.name}</label>
         </span>
 } 
 
