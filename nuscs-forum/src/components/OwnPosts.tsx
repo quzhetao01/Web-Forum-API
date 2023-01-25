@@ -62,9 +62,9 @@ const OwnPosts = (): JSX.Element => {
                 <div className="card mb-3">
                     <div className={`my-2 card-body d-flex justify-content-between`}>
                         <div className="ms-3 mt-1" >
-                            <h3 style={{fontWeight: "bold"}}>Your posts</h3>
+                            <h3 style={{fontWeight: "bold"}}>Your threads</h3>
                         </div>
-                        <button onClick={returnAllPost} className='btn btn-secondary ms-auto'>Back to all posts</button>
+                        <button onClick={returnAllPost} className='btn btn-secondary ms-auto'>Back to all threads</button>
                     </div>
                 </div>
                 <div className="card mt-4">

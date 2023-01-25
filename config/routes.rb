@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
-  get 'categories', to: "categories#index"
+  get '/categories', to: "categories#index"
+  post '/categories', to: "categories#create"
   resources :comments, only: [:create]
   resources :posts
   resources :users, only: [:create]

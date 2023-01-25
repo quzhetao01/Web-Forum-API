@@ -2,6 +2,10 @@
     text-align: center;
 }
 
+.category {
+    text-align: center;
+}
+
 .category:hover {
     cursor: pointer;
 }

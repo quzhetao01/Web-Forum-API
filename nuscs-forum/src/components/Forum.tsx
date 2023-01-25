@@ -27,7 +27,7 @@ const Forum = (): JSX.Element => {
     const [searchExist, setSearchExist] = useState(false);
     const [searchParam, setSearchParam] = useState("");
     const [categories, setCategories] = useState<ICategory[]>([]);
-    const [category, setCategory] = useState("All Posts");   
+    const [category, setCategory] = useState("All Threads");   
     
     useEffect(() => {
         if (!localStorage.getItem('jwt')) {
@@ -46,6 +46,9 @@ const Forum = (): JSX.Element => {
             getPosts(); // load posts array
             axios.get("http://localhost:3000/categories", config)
             .then(res => {
+                if (!res.data) {
+                    axios.post("http://localhost:3000/categories")
+                }
                 setCategories(res.data); // load categories array
             })
             .catch(err => console.log(err));
@@ -92,7 +95,7 @@ const Forum = (): JSX.Element => {
                                                         textAlign: "center"}}>Categories</h5>
                     <div className="card-body">
                         <ul className="list-group">
-                        <CategoryOption key={0} id={"0"} name="All Posts" getPosts={getPosts} setPosts={setPosts} setCategory={setCategory} 
+                        <CategoryOption key={0} id={"0"} name="All Threads" getPosts={getPosts} setPosts={setPosts} setCategory={setCategory} 
                                                                                                             setSearchExist={setSearchExist}/>
                         {categories.map((category, index) => <CategoryOption 
                                                                 key={category.id} 
@@ -124,7 +127,7 @@ const Forum = (): JSX.Element => {
                 {searchExist && <div className="card my-4">
                     <div className="d-flex justify-content-between card-body">
                         <span>Finding results for "<span style={{fontStyle: "italic"}}>{searchParam}</span>"</span>
-                        <button onClick={returnAllPost} className='btn btn-secondary ms-auto'>Back to all posts</button>
+                        <button onClick={returnAllPost} className='btn btn-secondary ms-auto'>Back to all threads</button>
                     </div>
                 </div>}
                 <div className="card mt-4">

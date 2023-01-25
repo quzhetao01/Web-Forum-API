@@ -5,20 +5,18 @@ application up and running.
 
 Things you may want to cover:
 
-* Ruby version
+This app runs on react version 18.2.0 and ruby version 3.1.3
 
-* System dependencies
+Once downloaded, please do this pre set-up to get the project underway.
 
-* Configuration
+At the root directory, type "rails db:migrate" into the console to initialise the migration files.
+Then, type "rails console" and all the follow commands to load in categories into the database.
+Command: 
+Category.create(name: "CS1101S") ;Category.create(name: "CS1231S") ; Category.create(name:"IS1108") ;
+Category.create(name: "CS2030S") ; Category.create(name: "CS2040S") ; Category.create(name: "CS2100") ;
+Category.create(name: "CS2101") ; Category.create(name: "CS2103T") ; Category.create(name: "CS2106") ;
+Category.create(name: "CS2109S") ; Category.create(name: "ES2660") ; Category.create(name: "CS3230") ;
+Category.create(name: "Internships") ; Category.create(name: "Co-curricular Activities and Events") ; Category.create(name: "Miscellaneous") ;
 
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+After this, exit the console by writing exit and then pressing "enter" and then run "rails server" in the terminal.
+Open up a new terminal and navigate to the nuscs-frontend folder. Run "npm start". Instructions on how to use the application is further explained in the FinalWriteUp.
