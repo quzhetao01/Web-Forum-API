@@ -1,17 +1,19 @@
 import axios from 'axios';
 import React, {useState} from 'react';
 import { IPost } from './Forum';
-import tokenConfig from './helper';
+import tokenConfig from '../helper/helper';
 
 interface IProps {
     setPosts: React.Dispatch<React.SetStateAction<IPost[]>>,
     setSearchParam: React.Dispatch<React.SetStateAction<string>>,
-    setSearchExist: React.Dispatch<React.SetStateAction<boolean>>
+    setSearchExist: React.Dispatch<React.SetStateAction<boolean>>,
+    setCategory: React.Dispatch<React.SetStateAction<string>>
 }
 
 
-function SearchBar(props: IProps) {
+const SearchBar= (props: IProps): JSX.Element => {
     const [search, setSearch] = useState("");
+
     
 
     function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -22,10 +24,12 @@ function SearchBar(props: IProps) {
         const config = tokenConfig();
         axios.get(`http://localhost:3000/posts/search/${search}`, config)
         .then(res => {
-            console.log(res);
+            // display only relevant posts
             props.setPosts(res.data);
+            // search mode on
             props.setSearchParam(search);
-            props.setSearchExist(true);     
+            props.setSearchExist(true);
+            props.setCategory("All posts");     
         })
         .catch(err => console.error(err));
         setSearch("");

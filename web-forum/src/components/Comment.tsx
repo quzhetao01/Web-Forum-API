@@ -1,6 +1,6 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import ThreadCSS from '../styles/Thread.module.css'
-import tokenConfig from './helper';
+import tokenConfig from '../helper/helper';
 import axios from 'axios';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
@@ -10,45 +10,33 @@ export interface IComment {
     id: number,
     text: string,
     post_id: number,
-    user_id: number
+    user_id: number,
+    user: {username: string}
 }
 
 interface IProps {
     id: number,
     text: string,
     postID: number,
-    commentUser: number,
+    commentUserID: number,
+    commentUser: {username: string}
     currentUser: number | undefined,
     setComments: React.Dispatch<React.SetStateAction<IComment[]>>
 }
 
 
-function Comment(props: IProps) {
+const Comment = (props: IProps): JSX.Element => {
 
     const [isEditing, setEditing] = useState(false);
     const [editedComment, setEditedComment] = useState("");
-    const [username, setUsername] = useState("");
 
-    useEffect(() => {
-        let config = tokenConfig();
-        axios.get(`http://localhost:3000/users/${props.commentUser}`, config)
-            .then(res => {
-                console.log(props.commentUser);
-                console.log(res.data);
-                setUsername(res.data.username);
-            })
-            .catch(err => { //redirect to welcome page
-                console.log(err);
-                window.location.href = "http://localhost:3001/";
-            })
-    }, [])
-
-
+    // Edit mode
     function handleEdit() {
         setEditing(true);
         setEditedComment(props.text);
     }
 
+    // Cancel edit mode
     function cancelEdit() {
         setEditing(false);
         setEditedComment("");
@@ -58,23 +46,24 @@ function Comment(props: IProps) {
         setEditedComment(event.currentTarget.value);
     }
 
+    // Publish edited comment
     function submitEdit() {
         const commentData = {"comment": {
             "text": editedComment,
             "post_id": props.postID,
             "user_id": props.commentUser
-        }}
+        }};
         let config = tokenConfig();
         axios.patch(`http://localhost:3000/comments/${props.id}`, commentData, config)
         .then(res => {
-            console.log(res);
-            props.setComments(res.data)
+            props.setComments(res.data);
         })
         .catch(err => console.log(err));
         setEditing(false);
         setEditedComment("");
     }
 
+    // Delete comment
     function handleDelete() {
         let config = tokenConfig();
         axios.delete(`http://localhost:3000/comments/${props.id}`, config)
@@ -87,11 +76,15 @@ function Comment(props: IProps) {
 
     return <div id={props.id.toString()} className={`container card-body border-bottom ${ThreadCSS.comment}`}>
         <div className="mb-3">
-            <h5 style={{fontWeight: "bold", display: "inline"}}>{username}</h5><p style={{display: "inline"}}> commented:</p>
+            <h5 style={{fontWeight: "bold", display: "inline"}}>{props.commentUser.username}</h5><p style={{display: "inline"}}> commented:</p>
         </div>
         <p style={{backgroundColor: "#ecf3f9"}} className={`border ${ThreadCSS.commentText}`}>{props.text}</p>
-        {props.commentUser === props.currentUser && <button onClick={handleEdit} className={`btn btn-dark ${ThreadCSS.editComment}`}><ModeEditOutlineOutlinedIcon/></button>}
-        {props.commentUser === props.currentUser && <button onClick={handleDelete} className={`btn btn-dark ${ThreadCSS.editComment}`}><DeleteOutlineOutlinedIcon/></button>}
+
+        {/* Edit and Delete feature available only to the user who commented */}
+        {props.commentUserID === props.currentUser && <button onClick={handleEdit} className={`btn btn-dark ${ThreadCSS.editComment}`}><ModeEditOutlineOutlinedIcon/></button>}
+        {props.commentUserID === props.currentUser && <button onClick={handleDelete} className={`btn btn-dark ${ThreadCSS.editComment}`}><DeleteOutlineOutlinedIcon/></button>}
+
+        {/* Edit mode */}
         {isEditing && <div> 
             <div className={ThreadCSS.addSection}>
             <textarea

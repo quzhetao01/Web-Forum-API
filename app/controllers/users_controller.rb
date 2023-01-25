@@ -31,12 +31,9 @@ class UsersController < ApplicationController
       render json: @user.errors, status: :unprocessable_entity
     end
   end
-
+  # POST /login
   def login
-    puts 'here'
     @user = User.find_by(username: user_params[:username])
-    puts @user
-    puts @user.authenticate(user_params[:password])
     if @user && @user.authenticate(user_params[:password])
       token = encode_token({ user_id: @user.id})
       render json: {user: @user, token: token}, status: :ok

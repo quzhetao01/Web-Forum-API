@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useParams, useNavigate} from "react-router-dom";
-import tokenConfig from './helper';
+import tokenConfig from '../helper/helper';
 import axios from 'axios';
 import ThreadCSS from '../styles/Thread.module.css'
 import Comment, {IComment} from './Comment';
@@ -13,7 +13,7 @@ import Delete from '@mui/icons-material/Delete';
 
 function Thread() {
     const [userID, setUserID] = useState();
-    const [post, setPost] = useState({id: 0, header: "", description: "", user_id: 0});
+    const [post, setPost] = useState({id: 0, header: "", description: "", user_id: 0, user: {username:""}});
     const [isExpanded, setExpanded] = useState(false);
     const [newComment, setNewComment] = useState("");
     const [comments, setComments] = useState<IComment[]>([]);
@@ -30,7 +30,7 @@ function Thread() {
             let config = tokenConfig();
             axios.get("http://localhost:3000/me", config)
             .then(res => {
-                console.log(res.data);
+
                 setUserID(res.data.id);
             })
             .catch(err => { //redirect to welcome page
@@ -39,18 +39,18 @@ function Thread() {
             })
 
 
-            // set post State to the specific post 
+            // load post State to the specific post 
             axios.get(`http://localhost:3000/posts/${id}`, config)
             .then(res => {
-                // console.log(res.data);
+                console.log(res.data);
                 setPost(res.data);
             })
             .catch(err => console.log(err));
 
-            // set comments array to all comments related to the post
+            // load comments array to all comments related to the post
             axios.get(`http://localhost:3000/comments/${id}`, config)
             .then(res => {
-                console.log(res.data);
+
                 setComments(res.data);
             })
             .catch(err => console.log(err));
@@ -77,7 +77,6 @@ function Thread() {
             let config = tokenConfig();
             axios.post("http://localhost:3000/comments", commentData, config)
             .then(res => {
-                console.log(res);
                 setComments((prevValue: IComment[]) => {
                     return [...prevValue, res.data]
                 })
@@ -92,16 +91,18 @@ function Thread() {
 
     }
     
+    // redirect to edit thread
     function handleEdit(event: React.MouseEvent<HTMLButtonElement, MouseEvent> ) {
         navigate(`../../editPosts/${id}`, {state: post})
     }
 
+    // delete thread
     function handleDelete(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
         const config = tokenConfig();
         axios.delete(`http://localhost:3000/posts/${id}`, config)
         .then(res => console.log(res))
         .catch(err => console.log(err));
-        window.location.href = "http://localhost:3001/forum"
+        window.location.href = "http://localhost:3001/forum";
     }
 
     return <div className="container-fluid p-5">
@@ -109,9 +110,10 @@ function Thread() {
             <div className="col px-5">
                 <div className="card">
                     <div className="card-body">
-                        <div className="border-bottom pb-5">
-                            <div className="d-flex justify-content-between">
-                                <h3>{post.header}</h3>
+                        <div className="border-bottom ms-2 pb-5">
+                            <p style={{fontWeight: "bold"}} className="fs-6">Posted by: <span style={{color: "#b5b2c2"}}>{post.user.username}</span></p>
+                            <div className="d-flex justify-content-between my-2">
+                                <h3 style={{color: "#3b71ca", fontWeight:"bold"}}>{post.header}</h3>
                                 <div>
                                     {userID === post.user_id && <button onClick={handleEdit} className={`btn btn-dark ${ThreadCSS.editPost}`}><ModeEditIcon/></button>}
                                     {userID === post.user_id && <button onClick={handleDelete} className={`btn btn-dark ${ThreadCSS.editPost}`}><Delete/></button>}
@@ -140,7 +142,8 @@ function Thread() {
                                     id={comment.id} 
                                     text={comment.text} 
                                     postID={comment.post_id} 
-                                    commentUser={comment.user_id}
+                                    commentUserID={comment.user_id}
+                                    commentUser={comment.user}
                                     currentUser={userID}
                                     setComments={setComments} />)}
                         </div>

@@ -6,24 +6,30 @@ class PostsController < ApplicationController
   def index
     @posts = Post.all 
 
-    render json: {posts: @posts, user: @user}
+    render json: @posts, methods: [:user, :category] 
   end
 
   # GET /posts/1
   def show
-    render json: @post
+    render json: @post, methods: [:user]
   end
 
   #GET /posts/search/:search
   def showSearch
     posts = Post.where("header LIKE ?", "%" + params[:search] + "%")
-    render json: posts
+    render json: posts, methods: [:user, :category] 
   end
 
   #GET /posts/category/:id
   def showCategory
     posts = Post.where(category_id: params[:id])
-    render json: posts
+    render json: posts, methods: [:user, :category] 
+  end
+
+  #GET "/posts/ownUser/:id"
+  def showUserPosts
+    posts = Post.where(user_id: params[:id])
+    render json: posts, methods: [:user, :category] 
   end
 
   # POST /posts
@@ -61,5 +67,13 @@ class PostsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def post_params
       params.require(:post).permit(:header, :description, :category_id)
+    end
+
+    def user
+      User.find(self.user_id)
+    end
+
+    def category
+      Category.find(self.category_id)
     end
 end

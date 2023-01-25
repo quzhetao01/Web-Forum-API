@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {useParams, useLocation} from "react-router-dom";
 import axios from 'axios';
-import tokenConfig from './helper';
+import tokenConfig from '../helper/helper';
 import AddPostCSS from '../styles/AddPost.module.css';
 
 
@@ -34,10 +34,11 @@ const EditPost = () => {
         setText(prevValue => {
             return {...prevValue, 
                 [name]: value};
-            })
+            });
     }
 
     function editThread() {
+        // error handling
         if (!text.title && !text.title) {
             setText({title: "", description: ""});
             setError({title: true, description: true});
@@ -47,7 +48,7 @@ const EditPost = () => {
         } else if (!text.description) {
             setText({title: "", description: ""});
             setError({title: false, description: true});
-        } else {
+        } else { // no faulty submission, edit post in database
             
             const data = {"post": {"header": text.title, "description": text.description}};
             let config = tokenConfig();
@@ -59,6 +60,7 @@ const EditPost = () => {
                 console.log(err);
             })
             setText({title: "", description: ""});
+            // redirect back to specific post
             window.location.href = `http://localhost:3001/forum/${id}`;
         }
     }
@@ -75,6 +77,7 @@ const EditPost = () => {
                         <label htmlFor="description" className="form-label">Description</label>
                         <textarea onChange={handleText} name="description" className="form-control" id="description" rows={7} placeholder="Text" value={text.description}></textarea>
                     </div>
+                    {/* error messages */}
                         {isError.title && <p className={AddPostCSS.error}>Title cannot be empty</p>}
                         {isError.description && <p className={AddPostCSS.error}>Description cannot be empty</p>}
                         <button className='btn btn-dark' onClick={editThread} style={{backgroundColor: "#576490"}}>Publish edited thread</button>

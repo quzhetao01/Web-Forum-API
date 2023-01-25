@@ -2,10 +2,11 @@ import React, {useState, useEffect} from 'react';
 import WelcomeCSS from '../styles/Welcome.module.css';
 import { useNavigate} from 'react-router-dom';
 import axios from "axios";
-import tokenConfig from './helper';
+import tokenConfig from '../helper/helper';
 
-function Register() {
+const Register= (): JSX.Element => {
     const [text, setText] = useState({username: "", password: ""});
+    const [isError, setError] = useState({username: false, password: false, passwordTooShort: false});
     const navigate = useNavigate();
     // Redirect to forum page is user is already logged in, stay at the same page if not
     useEffect(() => {
@@ -17,10 +18,10 @@ function Register() {
                 })
                 .catch(err => console.log(err))
         }
-    })
+    }, [])
 
     
-    function handleUsername(event: React.ChangeEvent<HTMLInputElement>): void {
+    function handleUsername(event: React.ChangeEvent<HTMLInputElement>) {
         const {name, value} = event.target;
         setText(prevValue => {
             return {
@@ -30,15 +31,34 @@ function Register() {
         });
     }
 
-    function handleSubmit(event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
+    function handleSubmit(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+      // empty username and password
+      if (!text.username) {
+        setError(prevValue => { 
+          return {...prevValue, 
+                  username: true}});
+      }
+      if (!text.password) {
+        setError(prevValue => {
+          return {...prevValue, 
+          password: true}});
+      }
+      // password is not long enough
+      if (text.password.length < 12) {
+        setError(prevValue => { 
+          return {...prevValue, 
+                  passwordTooShort: true}});
+      } else if (text.username && text.password) {
         const data = {"user": {'username': text.username, "password": text.password}};
         setText({username: "", password: ""});
         axios.post('http://localhost:3000/users', data)
             .then(res => {
                 console.log(res);
-                navigate("/login");
+                // inform login page that user just registered
+                navigate("/login", {state: {register: true}}); 
             })
             .catch(err => console.log(err));
+      }
         
         
     }
@@ -64,8 +84,7 @@ function Register() {
                       </div>
                     </div>
   
-                    
-  
+
                     <div className="d-flex flex-row align-items-center mb-4">
                       <i className="fas fa-lock fa-lg me-3 fa-fw"></i>
                       <div className="form-outline flex-fill mb-0">
@@ -73,11 +92,13 @@ function Register() {
                         <label className="form-label" htmlFor="passwordInput">Password</label>
                       </div>
                     </div>
+                    {/* Error messages */}
+                    {isError.username && <p className="text-danger">Username cannot be empty</p>}
+                    {isError.password && <p className="text-danger">Password cannot be empty</p>}
+                    {isError.passwordTooShort && <p className="text-danger">Password must be at least 12 characters long!</p>}
+
   
-                    
-  
-                    
-  
+
                     <div className="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
                     <button onClick={handleSubmit} type="button" className={`${WelcomeCSS.btn} btn btn-dark`} style={{backgroundColor: "#576490", width: "30%"}}>Register</button>
                     </div>
@@ -99,24 +120,6 @@ function Register() {
     </div>
   </section>
 } 
-    
-    // {/* <div classNameName='container'>
-    //     <h1>Register</h1>
-    //     <form>
-    //         <div classNameName="mb-3">
-    //             <label htmlFor="usernameInput" classNameName="form-label">Username</label>
-    //             <input onChange={handleUsername} id="usernameInput" classNameName="form-control" type="text" 
-    //             name="username" value={text.username} placeholder='Enter your username here'/>
-                
-    //         </div>
-    //         <div classNameName="mb-3">
-    //             <label htmlFor="passwordInput" classNameName="form-label">Password</label>
-    //             <input onChange={handleUsername} id="passwordInput" classNameName="form-control" type="text" 
-    //             name="password" value={text.password} placeholder='Enter your password here'/>
-    //         </div>
-    //             <button onClick={handleSubmit} type="button" 
-    //             classNameName={`${WelcomeCSS.btn} btn btn-dark`}>Register</button>
-    //     </form>
-    // </div> */}
+
 
 export default Register;

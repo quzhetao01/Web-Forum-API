@@ -8,7 +8,7 @@ interface IProps {
     setSelectedCategory: React.Dispatch<React.SetStateAction<string>>
 }
 
-function RadioButton(props: IProps) {
+const RadioButton = (props: IProps): JSX.Element => {
 
     function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
         props.setSelectedCategory(event.currentTarget.id);

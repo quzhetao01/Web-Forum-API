@@ -1,61 +1,39 @@
-import React, {useState, useEffect} from "react";
-import PostCSS from "../styles/Post.module.css";
-import axios from "axios";
-import tokenConfig from "./helper";
+import React from "react";
+import ForumCSS from '../styles/Forum.module.css';
+
 
 export interface Props {
     id: number,
     userID: number | void,
-    postUser: number,
+    postUserID: number,
+    postUser: {username: string},
     header: string,
     description: string,
     categoryID: number
+    category: {name: string}
 }
 
 const Post = (props: Props): JSX.Element => {
-    const [username, setUsername] = useState("");
-    const [category, setCategory] = useState("");
 
-    useEffect(() => {
-        let config = tokenConfig();
-        axios.get(`http://localhost:3000/users/${props.postUser}`, config)
-            .then(res => {
-                console.log(res.data);
-                setUsername(res.data.username);
-            })
-            .catch(err => { //redirect to welcome page
-                console.log(err);
-                window.location.href = "http://localhost:3001/";
-            })
 
-        axios.get(`http://localhost:3000/categories/${props.categoryID}`, config)
-        .then(res => {
-            console.log(res.data);
-            setCategory(res.data.name);
-        })
-        .catch(err => { //redirect to welcome page
-            console.log(err);
-            window.location.href = "http://localhost:3001/";
-        })
-    }, [])
-    function handlePost(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    
+    function handlePost(event: React.MouseEvent<HTMLParagraphElement, MouseEvent>) {
+        // redirect to a page displaying the entire thread with its comments
         const url = `http://localhost:3001/forum/${props.id}`; 
         window.location.href = url;
     }
 
-    return <tr className="border-bottom">
-        <td>
-            <h4>{username}</h4>
+    return <tr className={ForumCSS.post}>
+        <td style={{color:"#99b2dd", fontWeight: "500"}} className="text-left align-left">
+            <p>{props.postUser.username}</p>
         </td>
-        <td>
-            <div className={PostCSS.post}>
-                <h3>{props.header}</h3>
-                
-                <button onClick={handlePost}className="btn btn-dark">See more of this thread</button>
-            </div>
+        <td style={{color: "#3b71ca", fontWeight: "bold"}} className="text-left align-left">  
+            <p className={`fs-6 ${ForumCSS.postLink}`} onClick={handlePost}>
+                {props.header.length > 100 ? props.header.slice(0, 100) + "..." : props.header}
+            </p>
         </td>
-        <td>
-            Category {category}
+        <td style={{color: "#b5b2c2"}} className="text-center align-middle">
+            {props.category.name}
         </td>
         
     </tr>

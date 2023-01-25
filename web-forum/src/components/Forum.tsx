@@ -3,7 +3,7 @@ import axios from 'axios';
 import Post from './Post';
 import SearchBar from './SearchBar';
 import CategoryOption from './CategoryOption';
-import tokenConfig from './helper';
+import tokenConfig from '../helper/helper';
 import ForumCSS from '../styles/Forum.module.css';
 
 export interface IPost {
@@ -11,7 +11,9 @@ export interface IPost {
     header: string,
     description: string,
     user_id: number,
+    user: {username: string},
     category_id: number,
+    category: {name: string}
 }
 
 export interface ICategory {
@@ -19,7 +21,7 @@ export interface ICategory {
     name: string
 }
 
-function Forum() {
+const Forum = (): JSX.Element => {
     const [posts, setPosts] = useState<IPost[]>([]);
     const [userID, setUserID] = useState();
     const [searchExist, setSearchExist] = useState(false);
@@ -31,31 +33,35 @@ function Forum() {
         if (!localStorage.getItem('jwt')) {
             window.location.href = "http://localhost:3001/";
         } else {
-            getPosts();
             let config = tokenConfig();
+            axios.get("http://localhost:3000/me", config)
+            .then(res => {
+                setUserID(res.data.id);
+            })
+            .catch(err => { //redirect to welcome page
+                console.log(err);
+                window.location.href = "http://localhost:3001/";
+            })
+
+            getPosts(); // load posts array
             axios.get("http://localhost:3000/categories", config)
             .then(res => {
-                // console.log(res.data);
-                setCategories(res.data);
+                setCategories(res.data); // load categories array
             })
             .catch(err => console.log(err));
-        }}, [category]);
+        }}, []);
 
     // Allows users to add new thread
     function redirectAddPost() {
-        window.location.href = "http://localhost:3001/addPosts"
+        window.location.href = "http://localhost:3001/addPosts";
     }
 
+    // get all posts
     function getPosts() {
         let config = tokenConfig();
         axios.get("http://localhost:3000/posts", config)
         .then(res => {
-            // set userID state and postsArray state
-            console.log(res.data);
-            console.log("-----");
-            setUserID(res.data.user.id);
-            setPosts(res.data.posts);
-
+            setPosts(res.data);
         })
         .catch(err => {
             console.log(err);
@@ -63,8 +69,10 @@ function Forum() {
         })
     }
     
+
     function returnAllPost() {
-        getPosts();
+        getPosts(); // load all the posts
+        // off Search mode
         setSearchExist(false);
         setSearchParam("");
     }
@@ -84,26 +92,30 @@ function Forum() {
                                                         textAlign: "center"}}>Categories</h5>
                     <div className="card-body">
                         <ul className="list-group">
-                        <CategoryOption key={0} id={"0"} name="All Posts" getPosts={getPosts} setPosts={setPosts} setCategory={setCategory}/>
+                        <CategoryOption key={0} id={"0"} name="All Posts" getPosts={getPosts} setPosts={setPosts} setCategory={setCategory} 
+                                                                                                            setSearchExist={setSearchExist}/>
                         {categories.map((category, index) => <CategoryOption 
                                                                 key={category.id} 
                                                                 id={category.id.toString()} 
                                                                 name={category.name} 
                                                                 getPosts={getPosts} 
                                                                 setPosts={setPosts}
-                                                                setCategory={setCategory}/>)}
-                </ul>
+                                                                setCategory={setCategory}
+                                                                setSearchExist={setSearchExist}/>)}
+                        </ul>
                     </div>
                 </div>
             </div>
+        {/* right column */}
             <div className="col-9">
                 <div className="card mb-3">
-                    <div className={`card-body d-flex justify-content-between`}>
-                        <div className="ms-3" >
+                    <div className={`my-2 card-body d-flex justify-content-between`}>
+                        <div className="ms-3 mt-1" >
                             <h3 style={{fontWeight: "bold"}}>{category}</h3>
                         </div>
-                        <div style={{width: "60%"}}>
-                            <SearchBar setPosts={setPosts} setSearchParam={setSearchParam} setSearchExist={setSearchExist}/>
+                        <div className="" style={{width: "60%"}}>
+                            <SearchBar setPosts={setPosts} setSearchParam={setSearchParam} 
+                                        setSearchExist={setSearchExist} setCategory={setCategory}/>
 
                         </div>
                         
@@ -116,29 +128,30 @@ function Forum() {
                     </div>
                 </div>}
                 <div className="card mt-4">
-                    <div>
-                        <table className="text-center align-middle text-nowrap">
-                            <thead>
-                                <tr>
-                                    <th>User</th>
-                                    <th className="fw-bold">Topic</th>
-                                    <th>Category</th>
+                    <div className="mt-3 px-4">
+                        <table className="table table-lg table-borderless text-left align-middle text-nowrap">
+                            <thead style={{height: "40px"}}  >
+                                <tr className="">
+                                    <th className="fs-5 col-3 d-lg-table-cell">User posted</th>
+                                    <th className="fs-5 col-5 d-lg-table-cell">Topic</th>
+                                    <th className="fs-5 col-3 text-center d-lg-table-cell">Category</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-
-                                </tr>
+                            <br />
+                            <tbody className={ForumCSS.tableBody}>
+                                {posts.map((post: IPost, index) => <Post key={index} 
+                                                                        id={post.id} 
+                                                                        header={post.header} 
+                                                                        description={post.description} 
+                                                                        postUserID={post.user_id}
+                                                                        postUser={post.user}
+                                                                        categoryID={post.category_id} 
+                                                                        category={post.category}
+                                                                        userID={userID}/>)}
+                                
                             </tbody>
                         </table>
                     </div>
-                    {posts.map((post: IPost, index) => <Post key={index} 
-                                                            id={post.id} 
-                                                            header={post.header} 
-                                                            description={post.description} 
-                                                            postUser={post.user_id}
-                                                            categoryID={post.category_id} 
-                                                            userID={userID}/>)}
 
                 </div>
             </div>

@@ -8,8 +8,9 @@ import AddPost from './AddPost';
 import Navbar from './Navbar';
 import Thread from './Thread';
 import EditPost from './EditPost';
+import OwnPosts from './OwnPosts';
 
-function App() {
+const App = (): JSX.Element => {
     return <div>
         <Navbar />
         <Router>
@@ -21,7 +22,7 @@ function App() {
                 <Route path="/addPosts" element={<AddPost />} />
                 <Route path="/editPosts/:id" element={<EditPost />} />
                 <Route path="/forum/:id" element={<Thread />} />
-
+                <Route path="/forum/ownPosts" element={<OwnPosts />} />
             </Routes>
         </Router>
     </div>
