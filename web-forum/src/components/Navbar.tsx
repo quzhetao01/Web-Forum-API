@@ -28,7 +28,7 @@ const Navibar = (): JSX.Element => {
             <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ms-auto">
                 <NavDropdown title="Options" id="basic-nav-dropdown">
-                <NavDropdown.Item onClick={handleOwnPosts}>See your own posts</NavDropdown.Item>
+                <NavDropdown.Item onClick={handleOwnPosts}>See your own threads</NavDropdown.Item>
                 <NavDropdown.Divider />
                 <NavDropdown.Item onClick={handleLogout}>
                     Logout
