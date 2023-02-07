@@ -5,7 +5,7 @@ This app runs on react version 18.2.0 and ruby version 3.1.3
 Once downloaded, please do this pre set-up to get the project underway.
 
 At the root directory, type "rails db:migrate" into the console to initialise the migration files.
-Then, type "rails console" and all the follow commands to load in categories into the database.
+Then, type "rails console". After the console loads, copy and paste the following command to load in categories into the database.
 Command: 
 Category.create(name: "CS1101S") ;Category.create(name: "CS1231S") ; Category.create(name:"IS1108") ;
 Category.create(name: "CS2030S") ; Category.create(name: "CS2040S") ; Category.create(name: "CS2100") ;
