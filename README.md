@@ -13,7 +13,9 @@ secret_key: YOUR_OWN_SECRET
 Once done, save the file and exit the file
 
 Then, type "rails console". After the console loads, copy and paste the following command to load in categories into the database.
-Command: 
+
+//Command
+
 Category.create(name: "CS1101S") ;Category.create(name: "CS1231S") ; Category.create(name:"IS1108") ;
 Category.create(name: "CS2030S") ; Category.create(name: "CS2040S") ; Category.create(name: "CS2100") ;
 Category.create(name: "CS2101") ; Category.create(name: "CS2103T") ; Category.create(name: "CS2106") ;
