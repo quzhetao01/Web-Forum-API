@@ -1,10 +1,5 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
-
 This app runs on react version 18.2.0 and ruby version 3.1.3
 
 Once downloaded, please do this pre set-up to get the project underway.
