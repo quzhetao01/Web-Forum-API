@@ -1,0 +1,56 @@
+.post {
+    background-color: white;
+    margin: 20px;
+    padding: 10px;
+}
+
+
+
+.addComment {
+    width: 100%;
+    border: none;
+    /* padding: 4px; */
+    outline: none;
+    font-size: 1.2em;
+    resize: none;
+}
+
+.addButton {
+    position: absolute;
+    right: 18px;
+    bottom: -18px;
+    background: #99b2dd;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    outline: none;
+}
+
+.addSection {
+    position: relative;
+    /* width: 480px; */
+    margin: 30px auto 20px auto;
+    background: #fff;
+    padding: 15px;
+    border-radius: 7px;
+    box-shadow: 0 1px 5px rgb(138, 137, 137);
+}
+
+.editPost, .deletePost, .editComment, .deleteComment {
+    background-color:#99b2dd;
+    border: none;
+    margin: 0px 3px;
+}
+
+.cancelEdit, .publishEdit {
+    background-color: #2E4052;
+    margin: 0px 3px;
+}
+
+.commentList {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
